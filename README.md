@@ -15,7 +15,7 @@ This is a Python-based command-line interface (CLI) application for managing a m
 
 ## Installation
 ### Prerequisites
-Ensure you have Python installed on your system. This project requires Python 3.x.
+Ensure you have Python installed on your system. This project requires Python 3.13.0
 
 ### Install Required Libraries
 The script uses external libraries that need to be installed before running. Install them using:

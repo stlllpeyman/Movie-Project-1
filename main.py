@@ -10,28 +10,118 @@ BLUE = "\033[34m"
 RESET = "\033[0m"
 
 
+def print_menu():
+    """This function prints the menu of
+    'My Movies Database', a list of actions.
+    """
+    menu_text = """
+Menu: 
+1. List Movies
+2. Add Movie
+3. Delete Movie
+4. Update Movie
+5. Stats
+6. Random Movie
+7. Search Movie
+8. Movies Sorted by Rating
+9. Create Rating Histogram
+"""
+    blue_menu_text = f"{BLUE}{menu_text}{RESET}"
+    print(blue_menu_text)
+
+
+def user_menu_input(movies):
+    """
+    This function takes the 'movies' dictionary
+    and prompts the user to choose a number between
+    1–8, with each number referring to an action from
+    the menu and calling the corresponding function.
+    """
+    while True:
+        print_menu()
+        user_input = input(f"{GREEN}Enter choice (1-8): {RESET}").strip()
+        # Ignore empty input
+        if not user_input:
+            continue
+        if user_input == "1":
+            list_movies(movies)
+            input("\nPress enter to continue")
+
+        elif user_input == "2":
+            add_movie(movies)
+            input("\nPress enter to continue")
+
+        elif user_input == "3":
+            delete_movie(movies)
+            input("\nPress enter to continue")
+
+        elif user_input == "4":
+            update_movie(movies)
+            input("\nPress enter to continue")
+
+        elif user_input == "5":
+            get_movie_stats(movies)
+            input("\nPress enter to continue")
+
+        elif user_input == "6":
+            get_random_movie(movies)
+            input("\nPress enter to continue")
+
+        elif user_input == "7":
+            search_movie(movies)
+            input("\nPress enter to continue")
+
+        elif user_input == "8":
+            sort_movies_desc(movies)
+            input("\nPress enter to continue")
+
+        elif user_input == "9":
+            create_rating_bar(movies)
+            input("\nPress enter to continue")
+
+        else:
+            print(f"{RED}Invalid choice{RESET}")
+            continue
+
+
 def list_movies(movies):
+    """
+    This function takes the dictionary 'movies'
+    and lists all the movies with their ratings.
+    """
     print(f"{len(movies)} movies in total")
     for movie, rating in movies.items():
         print(f"{movie}: {rating}")
 
 
 def add_movie(movies):
-    new_movie = input(f"{GREEN}Enter new movie name: {RESET}").title()
-    new_rating = float(input(f"{GREEN}Enter new movie rating (0-10): {RESET}").replace(",", "."))
-
+    """
+    This function prompts the user to add a new movie
+    and its rating to the dictionary 'movies'.
+    """
     while True:
+        new_movie = input(f"{GREEN}Enter new movie name: {RESET}").title()
+
+        if new_movie in movies:
+            print(f"{RED}Movie {new_movie} already exists! Try again.{RESET}")
+            continue
+
+        rating_input = input(f"{GREEN}Enter new movie rating (0-10): {RESET}")
+        new_rating = float(rating_input.replace(",", "."))
 
         if 0 <= new_rating <= 10:
             movies[new_movie] = new_rating
             print(f"Movie {new_movie} successfully added")
             break
 
-        else:
-            print(f"{RED}Rating {new_rating} is invalid{RESET}")
+        print(f"{RED}Rating {new_rating} is invalid{RESET}")
 
 
 def delete_movie(movies):
+    """
+    This function prompts the user to enter a movie name to delete,
+    checks if the title exists in the 'movies' dictionary and deletes it.
+    """
     movie_to_delete = input(f"{GREEN}Enter movie name to delete: {RESET}").title()
 
     if movie_to_delete in movies:
@@ -43,6 +133,11 @@ def delete_movie(movies):
 
 
 def update_movie(movies):
+    """
+    This function prompts the user to enter a movie name,
+    checks if the movie exists in the 'movies' dictionary,
+    and allows the user to update its rating.
+    """
     movie_to_update = input(f"{GREEN}Enter movie name: {RESET}").title()
 
     if movie_to_update in movies:
@@ -55,6 +150,11 @@ def update_movie(movies):
 
 
 def get_movie_stats(movies):
+    """
+    This function takes the 'movies' dictionary and
+    prints the average and median rating as well as the
+    best and the worst rated movie.
+    """
     sorted_values = sorted(movies.values())
 
     average_rating = sum(sorted_values) / len(sorted_values)
@@ -114,12 +214,21 @@ def get_movie_stats(movies):
 
 
 def get_random_movie(movies):
+    """
+    This function uses the random module to get a random movie
+    from the 'movies' dictionary as a suggestion to watch.
+    """
     convert_database_to_tuple = list(movies.items())
     random_selection = random.choice(convert_database_to_tuple)
     print(f"Your movie for tonight: {random_selection[0]}, it's rated {random_selection[1]}")
 
 
 def search_movie(movies):
+    """
+    This function prompts the user to enter part of the movie
+    name and searches for it in the 'movies' dictionary using
+    fuzzymatch module for fuzzy string matching.
+    """
     search_input = input(f"{GREEN}Enter part of the movie name: {RESET}").casefold()
 
     # fuzzymatch module: using process.extract() to get best matches
@@ -147,9 +256,12 @@ def search_movie(movies):
 
 
 def sort_movies_desc(movies):
-    """this function converts movies database into list of tuples,
-    each tuple holds movie title and movie rating, and then sorts
-    the list of movies by movie rating in descending order."""
+    """
+    This function converts the 'movies' dictionary
+    into list of tuples, each tuple holds movie title
+    and movie rating, and then sorts the list of movies
+    by movie rating in descending order.
+    """
 
     list_of_movie_tuples = tuple(movies.items())
 
@@ -165,14 +277,16 @@ def sort_movies_desc(movies):
         print(f"{item[0]}: {item[1]}")
 
 
-# Create movie/rating bar chart
 def create_rating_bar(movies):
-    """this function creates a bar chart (movies on x_axis,
-    rating on y-axis) using the matplotlib module"""
+    """
+    This function takes the 'movies' dictionary and
+    creates a bar chart based on the movie ratings
+    using the matplotlib module.
+    """
     movies_keys = list(movies.keys())
     movies_values = list(movies.values())
 
-    # BAR CHART: movies on x-axis, rating on y-axis
+    # BAR CHART: movies (keys) on x-axis, ratings (values) on y-axis
     plt.bar(movies_keys, movies_values, color="blue", edgecolor="black")
 
     for key, value in movies.items():
@@ -196,72 +310,10 @@ def create_rating_bar(movies):
     plt.show()
 
 
-def print_menu():
-    menu_text = """
-Menu: 
-1. List Movies
-2. Add Movie
-3. Delete Movie
-4. Update Movie
-5. Stats
-6. Random Movie
-7. Search Movie
-8. Movies Sorted by Rating
-9. Create Rating Histogram
-"""
-    blue_menu_text = f"{BLUE}{menu_text}{RESET}"
-    print(blue_menu_text)
-
-
-def user_menu_input(movies):
-    while True:
-        print_menu()
-        user_input = input(f"{GREEN}Enter choice (1-8): {RESET}").strip()
-        # Ignore empty input
-        if not user_input:
-            continue
-        if user_input == "1":
-            list_movies(movies)
-            input("\nPress enter to continue")
-
-        elif user_input == "2":
-            add_movie(movies)
-            input("\nPress enter to continue")
-
-        elif user_input == "3":
-            delete_movie(movies)
-            input("\nPress enter to continue")
-
-        elif user_input == "4":
-            update_movie(movies)
-            input("\nPress enter to continue")
-
-        elif user_input == "5":
-            get_movie_stats(movies)
-            input("\nPress enter to continue")
-
-        elif user_input == "6":
-            get_random_movie(movies)
-            input("\nPress enter to continue")
-
-        elif user_input == "7":
-            search_movie(movies)
-            input("\nPress enter to continue")
-
-        elif user_input == "8":
-            sort_movies_desc(movies)
-            input("\nPress enter to continue")
-
-        elif user_input == "9":
-            create_rating_bar(movies)
-            input("\nPress enter to continue")
-
-        else:
-            print(f"{RED}Invalid choice{RESET}")
-            continue
-
-
 def main():
+    """
+    Initializes a movie database and displays the menu for user interaction.
+    """
     movies = {
         "The Shawshank Redemption": 9.5,
         "Pulp Fiction": 8.8,

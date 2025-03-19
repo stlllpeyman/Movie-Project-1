@@ -32,51 +32,32 @@ Menu:
 
 def user_menu_input(movies):
     """
-    This function takes the 'movies' dictionary
-    and prompts the user to choose a number between
-    1–8, with each number referring to an action from
-    the menu and calling the corresponding function.
+    This function displays a menu and handles user input to perform actions
+    on a movie collection. The function continuously prompts the user for a choice,
+    executes the corresponding function from the menu, and waits for user confirmation
+    before displaying the menu again.
     """
+    user_choices = {
+        "1": list_movies,
+        "2": add_movie,
+        "3": delete_movie,
+        "4": update_movie,
+        "5": get_movie_stats,
+        "6": get_random_movie,
+        "7": search_movie,
+        "8": sort_movies_desc,
+        "9": create_rating_bar
+    }
+
     while True:
         print_menu()
-        user_input = input(f"{GREEN}Enter choice (1-8): {RESET}").strip()
+        user_input = input(f"{GREEN}Enter choice (1-9): {RESET}").strip()
         # Ignore empty input
         if not user_input:
             continue
-        if user_input == "1":
-            list_movies(movies)
-            input("\nPress enter to continue")
 
-        elif user_input == "2":
-            add_movie(movies)
-            input("\nPress enter to continue")
-
-        elif user_input == "3":
-            delete_movie(movies)
-            input("\nPress enter to continue")
-
-        elif user_input == "4":
-            update_movie(movies)
-            input("\nPress enter to continue")
-
-        elif user_input == "5":
-            get_movie_stats(movies)
-            input("\nPress enter to continue")
-
-        elif user_input == "6":
-            get_random_movie(movies)
-            input("\nPress enter to continue")
-
-        elif user_input == "7":
-            search_movie(movies)
-            input("\nPress enter to continue")
-
-        elif user_input == "8":
-            sort_movies_desc(movies)
-            input("\nPress enter to continue")
-
-        elif user_input == "9":
-            create_rating_bar(movies)
+        elif user_input in user_choices:
+            user_choices[user_input](movies)
             input("\nPress enter to continue")
 
         else:
@@ -141,7 +122,8 @@ def update_movie(movies):
     movie_to_update = input(f"{GREEN}Enter movie name: {RESET}").title()
 
     if movie_to_update in movies:
-        new_rating = float(input(f"{GREEN}Enter new movie rating (0-10): {RESET}").replace(",", "."))
+        rating_input = input(f"{GREEN}Enter new movie rating (0-10): {RESET}")
+        new_rating = float(rating_input.replace(",", "."))
         movies[movie_to_update] = new_rating
         print(f"Movie {movie_to_update} successfully updated")
 

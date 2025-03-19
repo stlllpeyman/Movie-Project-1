@@ -59,5 +59,5 @@ Feel free to fork this repository and submit pull requests with improvements or 
 This project is open-source and available under the MIT License.
 
 ## Author
-STIIIpeyman
+Developed by Peyman Farahani – SDE Trainee and film nerd. 
 
